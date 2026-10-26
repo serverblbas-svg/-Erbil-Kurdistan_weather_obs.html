@@ -29,7 +29,7 @@
             z-index: 9999;
         }
 
-        /* قەبارەی بچووککراوە بۆ سەر لۆگۆ */
+        /* قەبارەی بازنەکە */
         .weather-circle {
             width: 250px;
             height: 250px;
@@ -42,33 +42,33 @@
             justify-content: center;
             text-align: center;
             box-shadow: 0 6px 18px rgba(0,0,0,0.8);
-            padding: 8px;
+            padding: 12px;
             box-sizing: border-box;
         }
 
         .city {
-            font-size: 30px;
+            font-size: 26px;
             font-weight: bold;
             color: #f5f7f8;
             margin-bottom: 2px;
         }
 
         .icon {
-            font-size: 30px;
+            font-size: 36px;
             line-height: 1;
-            margin: 2px 0;
+            margin: 4px 0;
         }
 
         .temp {
-            font-size: 30px;
+            font-size: 32px;
             font-weight: bold;
-            line-height: 1;
+            line-height: 1.1;
         }
 
         .condition {
-            font-size: 30px;
+            font-size: 22px;
             color: #cbd5e1;
-            margin-top: 2px;
+            margin-top: 4px;
             white-space: nowrap;
         }
     </style>
@@ -79,7 +79,7 @@
         <div class="weather-circle">
             <div class="city">📍 هەولێر</div>
             <div class="icon" id="weather-icon">☀️</div>
-            <div class="temp" id="temp-val">٢٨°C</div>
+            <div class="temp" id="temp-val">٢٤°C</div>
             <div class="condition" id="cond-text">ساماڵ</div>
         </div>
     </div>
@@ -109,10 +109,10 @@
             return { text: 'ساماڵ', emoji: isDay ? '☀️' : '🌙' };
         }
 
-        // وەرگرتنی خۆکاری کەشوهەوای هەولێر لە ڕێگەی Open-Meteo
+        // وەرگرتنی خۆکاری کەشوهەوای هەولێر بە API سەربەست
         async function updateErbilWeather() {
             try {
-                const response = await fetch(`https://www.accuweather.com/en/iq/erbil/206937/weather-forecast/206937`);
+                const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${ERBIL_LAT}&longitude=${ERBIL_LON}¤t_weather=true`);
                 if (!response.ok) return;
 
                 const data = await response.json();
@@ -134,7 +134,7 @@
         // داگیرساندنی ڕاستەوخۆ
         updateErbilWeather();
 
-        // نوێکردنەوەی خۆکارانە لە ھەر ٥ خولەک جارێکدا (300,000 میلیم چرکە)
+        // نوێکردنەوەی خۆکارانە لە ھەر ٥ خولەک جارێکدا
         setInterval(updateErbilWeather, 300000);
     </script>
 
