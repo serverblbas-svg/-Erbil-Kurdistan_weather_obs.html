@@ -21,53 +21,55 @@
             position: relative;
         }
 
-        /* جێگیرکردنی بازنەکە لە گۆشەی چەپی سەرەوەی شاشە */
+        /* جێگیرکردنی بازنەکە ڕێک لەسەر شوێنی لۆگۆی کەناڵی سەحەر (دەستە چەپی سەرەوە) */
         .weather-widget-container {
             position: absolute;
-            left: 60px;
-            top: 40px;
+            left: 45px;
+            top: 25px;
             z-index: 9999;
         }
 
+        /* قەبارەی بچووککراوە بۆ سەر لۆگۆ */
         .weather-circle {
-            width: 320px;
-            height: 320px;
+            width: 140px;
+            height: 140px;
             background: linear-gradient(135deg, rgb(1, 1, 14), rgba(1, 11, 26, 0.98));
-            border: 4px solid #f4f6f7;
+            border: 3px solid #f4f6f7;
             border-radius: 50%;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-            padding: 20px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.8);
+            padding: 8px;
             box-sizing: border-box;
         }
 
         .city {
-            font-size: 26px;
+            font-size: 13px;
             font-weight: bold;
-            margin-bottom: 5px;
             color: #f5f7f8;
+            margin-bottom: 2px;
         }
 
         .icon {
-            font-size: 64px;
-            margin: 5px 0;
+            font-size: 30px;
             line-height: 1;
+            margin: 2px 0;
         }
 
         .temp {
-            font-size: 44px;
+            font-size: 20px;
             font-weight: bold;
-            line-height: 1.1;
+            line-height: 1;
         }
 
         .condition {
-            font-size: 18px;
+            font-size: 11px;
             color: #cbd5e1;
-            margin-top: 5px;
+            margin-top: 2px;
+            white-space: nowrap;
         }
     </style>
 </head>
@@ -78,7 +80,7 @@
             <div class="city">📍 هەولێر</div>
             <div class="icon" id="weather-icon">☀️</div>
             <div class="temp" id="temp-val">٢٨°C</div>
-            <div class="condition" id="cond-text">ساماڵ و خۆرەتاو</div>
+            <div class="condition" id="cond-text">ساماڵ</div>
         </div>
     </div>
 
@@ -95,7 +97,7 @@
 
         // دیاریکردنی دەق و ئیمۆجی بەپێی کۆدی کەشوهەوا
         function decodeWeather(code, isDay) {
-            if (code === 0) return { text: 'ساماڵ و خۆرەتاو', emoji: isDay ? '☀️' : '🌙' };
+            if (code === 0) return { text: 'ساماڵ', emoji: isDay ? '☀️' : '🌙' };
             if (code === 1 || code === 2) return { text: 'کەمێک هەور', emoji: isDay ? '⛅' : '🌤️' };
             if (code === 3) return { text: 'هەور', emoji: '☁️' };
             if (code === 45 || code === 48) return { text: 'تەم و مژ', emoji: '🌫️' };
@@ -104,7 +106,7 @@
             if (code >= 71 && code <= 77) return { text: 'بەفربارین', emoji: '❄️' };
             if (code >= 80 && code <= 82) return { text: 'ڕێژنە باران', emoji: '⛈️' };
             if (code >= 95) return { text: 'هەورەگرمە', emoji: '🌩️' };
-            return { text: 'ساماڵ و خۆرەتاو', emoji: isDay ? '☀️' : '🌙' };
+            return { text: 'ساماڵ', emoji: isDay ? '☀️' : '🌙' };
         }
 
         // وەرگرتنی خۆکاری کەشوهەوای هەولێر لە ڕێگەی Open-Meteo
