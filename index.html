@@ -21,11 +21,11 @@
             position: relative;
         }
 
-        /* جێگیرکردنی بازنەکە لە گۆشەی دەستە چەپی خوارەوەی شاشە */
+        /* جێگیرکردنی بازنەکە لە گۆشەی چەپی سەرەوەی شاشە */
         .weather-widget-container {
             position: absolute;
             left: 60px;
-            top: 0px;
+            top: 40px;
             z-index: 9999;
         }
 
@@ -53,19 +53,19 @@
         }
 
         .icon {
-            font-size: 26px;
+            font-size: 64px;
             margin: 5px 0;
             line-height: 1;
         }
 
         .temp {
-            font-size: 26px;
+            font-size: 44px;
             font-weight: bold;
             line-height: 1.1;
         }
 
         .condition {
-            font-size: 26px;
+            font-size: 18px;
             color: #cbd5e1;
             margin-top: 5px;
         }
@@ -100,7 +100,7 @@
             if (code === 3) return { text: 'هەور', emoji: '☁️' };
             if (code === 45 || code === 48) return { text: 'تەم و مژ', emoji: '🌫️' };
             if (code >= 51 && code <= 55) return { text: 'نمە باران', emoji: '🌦️' };
-            if (code >= 61 && code <= 65) return { text: 'باراناوی', emoji: 'return { text: 'باراناوی', emoji: '🌧️' };
+            if (code >= 61 && code <= 65) return { text: 'باراناوی', emoji: '🌧️' };
             if (code >= 71 && code <= 77) return { text: 'بەفربارین', emoji: '❄️' };
             if (code >= 80 && code <= 82) return { text: 'ڕێژنە باران', emoji: '⛈️' };
             if (code >= 95) return { text: 'هەورەگرمە', emoji: '🌩️' };
