@@ -2,14 +2,33 @@
 <html lang="ku" dir="rtl">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>کەشوهەوای هەولێر - شاشە</title>
     <style>
-        body {
+        * {
+            box-sizing: border-box;
             margin: 0;
+            padding: 0;
+        }
+
+        body {
             background-color: transparent; /* بۆ ئەوەی لەسەر باکگراوندێکی تر دەربکەوێت */
             font-family: 'NRT Bold', Arial, sans-serif;
             color: #ffffff;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            position: relative;
         }
+
+        /* جێگیرکردنی بازنەکە لە گۆشەی دەستە چەپی خوارەوەی شاشە */
+        .weather-widget-container {
+            position: absolute;
+            left: 30px;
+            bottom: 30px;
+            z-index: 9999;
+        }
+
         .weather-circle {
             width: 320px;
             height: 320px;
@@ -21,24 +40,30 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
             padding: 20px;
             box-sizing: border-box;
         }
+
         .city {
             font-size: 26px;
             font-weight: bold;
             margin-bottom: 5px;
             color: #f5f7f8;
         }
+
         .icon {
             font-size: 64px;
-            margin: 10px 0;
+            margin: 5px 0;
+            line-height: 1;
         }
+
         .temp {
-            font-size: 42px;
+            font-size: 44px;
             font-weight: bold;
+            line-height: 1.1;
         }
+
         .condition {
             font-size: 18px;
             color: #cbd5e1;
@@ -48,12 +73,68 @@
 </head>
 <body>
 
-    <div class="weather-circle">
-        <div class="city">📍 هەولێر</div>
-        <div class="icon" id="weather-icon">☀️</div>
-        <div class="temp" id="temp-val">٢٨°C</div>
-        <div class="condition" id="cond-text">ساماڵ و خۆرەتاو</div>
+    <div class="weather-widget-container">
+        <div class="weather-circle">
+            <div class="city">📍 هەولێر</div>
+            <div class="icon" id="weather-icon">☀️</div>
+            <div class="temp" id="temp-val">٢٨°C</div>
+            <div class="condition" id="cond-text">ساماڵ و خۆرەتاو</div>
+        </div>
     </div>
+
+    <script>
+        const ERBIL_LAT = 36.1912;
+        const ERBIL_LON = 44.0091;
+
+        // گۆڕینی ژمارە ئینگلیزییەکان بۆ کوردی
+        function toKurdishNumerals(str) {
+            const englishDigits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+            const kurdishDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+            return String(str).replace(/[0-9]/g, (w) => kurdishDigits[englishDigits.indexOf(w)]);
+        }
+
+        // دیاریکردنی دەق و ئیمۆجی بەپێی کۆدی کەشوهەوا
+        function decodeWeather(code, isDay) {
+            if (code === 0) return { text: 'ساماڵ و خۆرەتاو', emoji: isDay ? '☀️' : '🌙' };
+            if (code === 1 || code === 2) return { text: 'کەمێک هەور', emoji: isDay ? '⛅' : '🌤️' };
+            if (code === 3) return { text: 'هەور', emoji: '☁️' };
+            if (code === 45 || code === 48) return { text: 'تەم و مژ', emoji: '🌫️' };
+            if (code >= 51 && code <= 55) return { text: 'نمە باران', emoji: '🌦️' };
+            if (code >= 61 && code <= 65) return { text: 'باراناوی', emoji: 'return { text: 'باراناوی', emoji: '🌧️' };
+            if (code >= 71 && code <= 77) return { text: 'بەفربارین', emoji: '❄️' };
+            if (code >= 80 && code <= 82) return { text: 'ڕێژنە باران', emoji: '⛈️' };
+            if (code >= 95) return { text: 'هەورەگرمە', emoji: '🌩️' };
+            return { text: 'ساماڵ و خۆرەتاو', emoji: isDay ? '☀️' : '🌙' };
+        }
+
+        // وەرگرتنی خۆکاری کەشوهەوای هەولێر لە ڕێگەی Open-Meteo
+        async function updateErbilWeather() {
+            try {
+                const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${ERBIL_LAT}&longitude=${ERBIL_LON}&current_weather=true`);
+                if (!response.ok) return;
+
+                const data = await response.json();
+                if (data && data.current_weather) {
+                    const current = data.current_weather;
+                    const temp = Math.round(current.temperature);
+                    const isDay = current.is_day !== undefined ? current.is_day : 1;
+                    const weatherInfo = decodeWeather(current.weathercode, isDay);
+
+                    document.getElementById('temp-val').innerText = `${toKurdishNumerals(temp)}°C`;
+                    document.getElementById('weather-icon').innerText = weatherInfo.emoji;
+                    document.getElementById('cond-text').innerText = weatherInfo.text;
+                }
+            } catch (error) {
+                console.log("Error updating weather automatically:", error);
+            }
+        }
+
+        // داگیرساندنی ڕاستەوخۆ
+        updateErbilWeather();
+
+        // نوێکردنەوەی خۆکارانە لە ھەر ٥ خولەک جارێکدا (300,000 میلیم چرکە)
+        setInterval(updateErbilWeather, 300000);
+    </script>
 
 </body>
 </html>
