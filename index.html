@@ -24,8 +24,8 @@
         /* جێگیرکردنی بازنەکە لە گۆشەی دەستە چەپی خوارەوەی شاشە */
         .weather-widget-container {
             position: absolute;
-            left: 30px;
-            bottom: 30px;
+            left: 60px;
+            top: 0px;
             z-index: 9999;
         }
 
@@ -53,19 +53,19 @@
         }
 
         .icon {
-            font-size: 64px;
+            font-size: 26px;
             margin: 5px 0;
             line-height: 1;
         }
 
         .temp {
-            font-size: 44px;
+            font-size: 26px;
             font-weight: bold;
             line-height: 1.1;
         }
 
         .condition {
-            font-size: 18px;
+            font-size: 26px;
             color: #cbd5e1;
             margin-top: 5px;
         }
@@ -110,7 +110,7 @@
         // وەرگرتنی خۆکاری کەشوهەوای هەولێر لە ڕێگەی Open-Meteo
         async function updateErbilWeather() {
             try {
-                const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${ERBIL_LAT}&longitude=${ERBIL_LON}&current_weather=true`);
+                const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${ERBIL_LAT}&longitude=${ERBIL_LON}¤t_weather=true`);
                 if (!response.ok) return;
 
                 const data = await response.json();
