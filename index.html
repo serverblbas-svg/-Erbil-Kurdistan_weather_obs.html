@@ -1,13 +1,12 @@
 
 <!DOCTYPE html>
-<html lang="ku" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>کەشوهەوای هەولێر</title>
+<title>Erbil Weather</title>
 
 <style>
-
 * {
     box-sizing: border-box;
     margin: 0;
@@ -18,7 +17,7 @@ html, body {
     width: 100%;
     height: 100%;
     background: transparent;
-    font-family: "NRT Bold", "Noto Sans Arabic", Arial, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     font-weight: 900;
     overflow: hidden;
     -webkit-font-smoothing: antialiased;
@@ -26,7 +25,7 @@ html, body {
 
 .weather-widget-container {
     position: fixed;
-    top: 0px;
+    top: 0;
     left: 70px;
     z-index: 9999;
 }
@@ -66,13 +65,13 @@ html, body {
 }
 
 .weather-icon {
-    font-size: 20px;
+    font-size: 28px;
     line-height: 1.15;
     filter: drop-shadow(0 2px 3px rgba(0,0,0,0.6));
 }
 
 .temp {
-    font-size: 20px;
+    font-size: 27px;
     font-weight: 900;
     line-height: 1.1;
     direction: ltr;
@@ -83,7 +82,7 @@ html, body {
 }
 
 .condition {
-    font-size: 20px;
+    font-size: 17px;
     font-weight: 900;
     color: #ffffff;
     white-space: nowrap;
@@ -91,19 +90,19 @@ html, body {
 }
 
 .extra-info {
-    width: 94%;
+    width: 100%;
     margin-top: 5px;
     padding-top: 6px;
     border-top: 2px solid rgba(125, 211, 252, 0.65);
     color: #ffffff;
-    font-size: 20px;
+    font-size: 13px;
     font-weight: 900;
     line-height: 1.7;
     text-shadow: 0 2px 4px #000000;
 }
 
 .status {
-    font-size: 20px;
+    font-size: 10px;
     font-weight: 900;
     color: #bae6fd;
     margin-top: 1px;
@@ -116,21 +115,21 @@ html, body {
         left: 15px;
     }
 }
-
 </style>
 </head>
 
 <body>
+
 <div class="weather-widget-container">
     <div class="weather-circle">
-        <div class="city">📍 هەولێر</div>
+        <div class="city">📍 Erbil</div>
         <div class="weather-icon" id="weather-icon">🌤️</div>
         <div class="temp" id="temp-val">--°C</div>
-        <div class="condition" id="cond-text">بارکردنی داتا...</div>
+        <div class="condition" id="cond-text">Loading weather...</div>
         <div class="extra-info" id="extra-text">
-            شێ: --٪ | با: -- کم/ک
+            Humidity: --% | Wind: -- km/h
         </div>
-        <div class="status" id="status-text">پەیوەندی بە کەشوهەواوە...</div>
+        <div class="status" id="status-text">Connecting to weather...</div>
     </div>
 </div>
 
@@ -142,51 +141,46 @@ const API_URL =
     "&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,is_day" +
     "&timezone=Asia%2FBaghdad";
 
-const kurdishDigits = value =>
-    String(value).replace(/[0-9]/g, digit =>
-        "٠١٢٣٤٥٦٧٨٩"[Number(digit)]
-    );
-
 function getWeatherDescription(code) {
     const descriptions = {
-        0: ["☀️", "ئاسمان ڕوون"],
-        1: ["🌤️", "زۆر کەم هەور"],
-        2: ["⛅", "هەور بەشێوەیی"],
-        3: ["☁️", "هەوراو"],
-        45: ["🌫️", "تەمی"],
-        48: ["🌫️", "تەمی بەستوو"],
-        51: ["🌦️", "بارانی سووک"],
-        53: ["🌦️", "بارانی مامناوەند"],
-        55: ["🌧️", "بارانی بەهێز"],
-        56: ["🌧️", "بارانی سارد"],
-        57: ["🌧️", "بارانی ساردی بەهێز"],
-        61: ["🌦️", "بارانی سووک"],
-        63: ["🌧️", "باران"],
-        65: ["🌧️", "بارانی بەهێز"],
-        66: ["🌧️", "بارانی سەهۆڵی"],
-        67: ["🌧️", "بارانی سەهۆڵی بەهێز"],
-        71: ["🌨️", "بەفرێکی سووک"],
-        73: ["🌨️", "بەفر"],
-        75: ["❄️", "بەفرێکی بەهێز"],
-        77: ["❄️", "وردەبەفر"],
-        80: ["🌦️", "ڕشانەوەی باران"],
-        81: ["🌧️", "ڕشانەوەی باران"],
-        82: ["⛈️", "ڕشانەوەی بارانی بەهێز"],
-        85: ["🌨️", "ڕشانەوەی بەفر"],
-        86: ["❄️", "ڕشانەوەی بەفری بەهێز"],
-        95: ["⛈️", "زریان"],
-        96: ["⛈️", "زریان و تەگەرە"],
-        99: ["⛈️", "زریان و تەگەرەی بەهێز"]
+        0: ["☀️", "Clear Sky"],
+        1: ["🌤️", "Mainly Clear"],
+        2: ["⛅", "Partly Cloudy"],
+        3: ["☁️", "Overcast"],
+        45: ["🌫️", "Fog"],
+        48: ["🌫️", "Depositing Rime Fog"],
+        51: ["🌦️", "Light Drizzle"],
+        53: ["🌦️", "Moderate Drizzle"],
+        55: ["🌧️", "Dense Drizzle"],
+        56: ["🌧️", "Light Freezing Drizzle"],
+        57: ["🌧️", "Dense Freezing Drizzle"],
+        61: ["🌦️", "Light Rain"],
+        63: ["🌧️", "Moderate Rain"],
+        65: ["🌧️", "Heavy Rain"],
+        66: ["🌧️", "Light Freezing Rain"],
+        67: ["🌧️", "Heavy Freezing Rain"],
+        71: ["🌨️", "Light Snowfall"],
+        73: ["🌨️", "Moderate Snowfall"],
+        75: ["❄️", "Heavy Snowfall"],
+        77: ["❄️", "Snow Grains"],
+        80: ["🌦️", "Light Rain Showers"],
+        81: ["🌧️", "Moderate Rain Showers"],
+        82: ["⛈️", "Violent Rain Showers"],
+        85: ["🌨️", "Light Snow Showers"],
+        86: ["❄️", "Heavy Snow Showers"],
+        95: ["⛈️", "Thunderstorm"],
+        96: ["⛈️", "Thunderstorm with Hail"],
+        99: ["⛈️", "Severe Thunderstorm with Hail"]
     };
 
-    return descriptions[code] || ["🌡️", "کەشوهەوا"];
+    return descriptions[code] || ["🌡️", "Current Weather"];
 }
 
 async function loadWeather() {
     const status = document.getElementById("status-text");
 
     try {
-        status.textContent = "نوێکردنەوەی داتا...";
+        status.textContent = "Updating weather...";
 
         const response = await fetch(API_URL, {
             cache: "no-store"
@@ -212,47 +206,43 @@ async function loadWeather() {
         const weather = getWeatherDescription(code);
         let emoji = weather[0];
 
-        // نیشاندانی مانگ لە شەودا بۆ دۆخی ئاسمانی ڕوون
-        if (!isDay && code === 0) {
-            emoji = "🌙";
-        } else if (!isDay && code === 1) {
+        if (!isDay && (code === 0 || code === 1)) {
             emoji = "🌙";
         }
 
         document.getElementById("temp-val").textContent =
-            kurdishDigits(temperature) + "°C";
+            temperature + "°C";
 
         document.getElementById("weather-icon").textContent = emoji;
         document.getElementById("cond-text").textContent = weather[1];
 
         document.getElementById("extra-text").textContent =
-            "شێ: " + kurdishDigits(humidity) +
-            "٪ | با: " + kurdishDigits(wind) + " کم/ک";
+            "Humidity: " + humidity +
+            "% | Wind: " + wind + " km/h";
 
         const updatedAt = new Date();
+
         document.getElementById("status-text").textContent =
-            "نوێکراوەتەوە: " +
-            kurdishDigits(
-                updatedAt.toLocaleTimeString("en-GB", {
-                    timeZone: "Asia/Baghdad",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    hour12: false
-                })
-            );
+            "Updated: " +
+            updatedAt.toLocaleTimeString("en-GB", {
+                timeZone: "Asia/Baghdad",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false
+            });
 
     } catch (error) {
-        status.textContent =
-            "پەیوەندی بەردەست نییە؛ دووبارە هەوڵ دەدرێت";
+        status.textContent = "Weather unavailable - retrying...";
         console.error("Weather loading error:", error);
     }
 }
 
-// بارکردنی یەکەم داتا
+// Load weather immediately
 loadWeather();
 
-// نوێکردنەوەی خۆکار هەر ٥ خولەک جارێک
+// Automatically refresh every 5 minutes
 setInterval(loadWeather, 5 * 60 * 1000);
 </script>
+
 </body>
 </html>
