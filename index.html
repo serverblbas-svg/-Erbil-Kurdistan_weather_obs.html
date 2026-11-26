@@ -1,169 +1,247 @@
-
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Erbil Weather</title>
 
-<style>
-* { box-sizing:border-box; margin:0; padding:0; }
-html, body {
- width:100%; height:100%; background:transparent; font-family:Arial,Helvetica,sans-serif;
- overflow:hidden; -webkit-font-smoothing:antialiased;
-}
-.weather-widget-container { position:fixed; top:18px; left:24px; z-index:9999; }
-.weather-circle {
- width:200px; min-height:200px; border:1px solid #14264b;
- border-radius:28px;
- background:linear-gradient(145deg, #06132d 0%, #030914 100%);
- box-shadow:none;
- backdrop-filter:none; -webkit-backdrop-filter:none;
- color:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center;
- text-align:center; padding:14px 12px; gap:5px;
-}
-.city { font-size:14px; font-weight:800; color:#dceeff; white-space:nowrap; letter-spacing:.3px; }
-.weather-icon { font-size:34px; line-height:1.1; filter:drop-shadow(0 3px 8px rgba(0,0,0,.3)); }
-.temp { font-size:32px; font-weight:800; line-height:1; direction:ltr; color:#fff; letter-spacing:-1px; }
-.condition { font-size:12px; font-weight:700; color:#e7f2ff; white-space:nowrap; }
-.extra-info {
- width:100%; margin-top:4px; padding-top:5px; border-top:1px solid rgba(255,255,255,.22);
- color:#d6e6f7; font-size:11px; font-weight:600; line-height:1.5;
-}
-.status { font-size:9px; color:#9fc5e9; margin-top:2px; font-weight:600; }
-@media (max-width:400px) {
- .weather-widget-container { top:12px; left:12px; }
- .weather-circle { width:190px; min-height:185px; padding:12px; }
- .temp { font-size:30px; }
-}
-</style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erbil Weather</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            font-family: Arial, Helvetica, sans-serif;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .weather-widget-container {
+            position: fixed;
+            top: 18px;
+            left: 70px;
+            z-index: 9999;
+        }
+
+        .weather-circle {
+            width: 200px;
+            min-height: 200px;
+            border: 1px solid #14264b;
+            border-radius: 28px;
+            background: linear-gradient(145deg, #06132d 0%, #030914 100%);
+            box-shadow: none;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 14px 12px;
+            gap: 5px;
+        }
+
+        .city {
+            font-size: 14px;
+            font-weight: 800;
+            color: #dceeff;
+            white-space: nowrap;
+            letter-spacing: .3px;
+        }
+
+        .weather-icon {
+            font-size: 34px;
+            line-height: 1.1;
+            filter: drop-shadow(0 3px 8px rgba(0, 0, 0, .3));
+        }
+
+        .temp {
+            font-size: 32px;
+            font-weight: 800;
+            line-height: 1;
+            direction: ltr;
+            color: #fff;
+            letter-spacing: -1px;
+        }
+
+        .condition {
+            font-size: 12px;
+            font-weight: 700;
+            color: #e7f2ff;
+            white-space: nowrap;
+        }
+
+        .extra-info {
+            width: 100%;
+            margin-top: 4px;
+            padding-top: 5px;
+            border-top: 1px solid rgba(255, 255, 255, .22);
+            color: #d6e6f7;
+            font-size: 11px;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+
+        .status {
+            font-size: 9px;
+            color: #9fc5e9;
+            margin-top: 2px;
+            font-weight: 600;
+        }
+
+        @media (max-width:400px) {
+            .weather-widget-container {
+                top: 12px;
+                left: 12px;
+            }
+
+            .weather-circle {
+                width: 190px;
+                min-height: 185px;
+                padding: 12px;
+            }
+
+            .temp {
+                font-size: 30px;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-<div class="weather-widget-container">
-    <div class="weather-circle">
-        <div class="city">📍 هەولێر</div>
-        <div class="weather-icon" id="weather-icon">🌤️</div>
-        <div class="temp" id="temp-val">--°C</div>
-        <div class="condition" id="cond-text">کەشوهەوا بارکردن...</div>
-        <div class="extra-info" id="extra-text">
-            شێ: --% | با: -- km/h
+    <div class="weather-widget-container">
+        <div class="weather-circle">
+            <div class="city">📍 هەولێر</div>
+            <div class="weather-icon" id="weather-icon">🌤️</div>
+            <div class="temp" id="temp-val">--°C</div>
+            <div class="condition" id="cond-text">کەشوهەوا بارکردن...</div>
+            <div class="extra-info" id="extra-text">
+                شێ: --% | با: -- km/h
+            </div>
+            <div class="status" id="status-text">Connecting to weather...</div>
         </div>
-        <div class="status" id="status-text">Connecting to weather...</div>
     </div>
-</div>
 
-<script>
-const API_URL =
-    "https://api.open-meteo.com/v1/forecast" +
-    "?latitude=36.1911" +
-    "&longitude=44.0092" +
-    "&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,is_day" +
-    "&timezone=Asia%2FBaghdad";
+    <script>
+        const API_URL =
+            "https://api.open-meteo.com/v1/forecast" +
+            "?latitude=36.1911" +
+            "&longitude=44.0092" +
+            "&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,is_day" +
+            "&timezone=Asia%2FBaghdad";
 
-function getWeatherDescription(code) {
-    const descriptions = {
-        0: ["☀️", "Clear Sky"],
-        1: ["🌤️", "Mainly Clear"],
-        2: ["⛅", "Partly Cloudy"],
-        3: ["☁️", "Overcast"],
-        45: ["🌫️", "Fog"],
-        48: ["🌫️", "Depositing Rime Fog"],
-        51: ["🌦️", "Light Drizzle"],
-        53: ["🌦️", "Moderate Drizzle"],
-        55: ["🌧️", "Dense Drizzle"],
-        56: ["🌧️", "Light Freezing Drizzle"],
-        57: ["🌧️", "Dense Freezing Drizzle"],
-        61: ["🌦️", "Light Rain"],
-        63: ["🌧️", "Moderate Rain"],
-        65: ["🌧️", "Heavy Rain"],
-        66: ["🌧️", "Light Freezing Rain"],
-        67: ["🌧️", "Heavy Freezing Rain"],
-        71: ["🌨️", "Light Snowfall"],
-        73: ["🌨️", "Moderate Snowfall"],
-        75: ["❄️", "Heavy Snowfall"],
-        77: ["❄️", "Snow Grains"],
-        80: ["🌦️", "Light Rain Showers"],
-        81: ["🌧️", "Moderate Rain Showers"],
-        82: ["⛈️", "Violent Rain Showers"],
-        85: ["🌨️", "Light Snow Showers"],
-        86: ["❄️", "Heavy Snow Showers"],
-        95: ["⛈️", "Thunderstorm"],
-        96: ["⛈️", "Thunderstorm with Hail"],
-        99: ["⛈️", "Severe Thunderstorm with Hail"]
-    };
+        function getWeatherDescription(code) {
+            const descriptions = {
+                0: ["☀️", "Clear Sky"],
+                1: ["🌤️", "Mainly Clear"],
+                2: ["⛅", "Partly Cloudy"],
+                3: ["☁️", "Overcast"],
+                45: ["🌫️", "Fog"],
+                48: ["🌫️", "Depositing Rime Fog"],
+                51: ["🌦️", "Light Drizzle"],
+                53: ["🌦️", "Moderate Drizzle"],
+                55: ["🌧️", "Dense Drizzle"],
+                56: ["🌧️", "Light Freezing Drizzle"],
+                57: ["🌧️", "Dense Freezing Drizzle"],
+                61: ["🌦️", "Light Rain"],
+                63: ["🌧️", "Moderate Rain"],
+                65: ["🌧️", "Heavy Rain"],
+                66: ["🌧️", "Light Freezing Rain"],
+                67: ["🌧️", "Heavy Freezing Rain"],
+                71: ["🌨️", "Light Snowfall"],
+                73: ["🌨️", "Moderate Snowfall"],
+                75: ["❄️", "Heavy Snowfall"],
+                77: ["❄️", "Snow Grains"],
+                80: ["🌦️", "Light Rain Showers"],
+                81: ["🌧️", "Moderate Rain Showers"],
+                82: ["⛈️", "Violent Rain Showers"],
+                85: ["🌨️", "Light Snow Showers"],
+                86: ["❄️", "Heavy Snow Showers"],
+                95: ["⛈️", "Thunderstorm"],
+                96: ["⛈️", "Thunderstorm with Hail"],
+                99: ["⛈️", "Severe Thunderstorm with Hail"]
+            };
 
-    return descriptions[code] || ["🌡️", "Current Weather"];
-}
-
-async function loadWeather() {
-    const status = document.getElementById("status-text");
-
-    try {
-        status.textContent = "نوێکردنەوەی کەشوهەوا...";
-
-        const response = await fetch(API_URL, {
-            cache: "no-store"
-        });
-
-        if (!response.ok) {
-            throw new Error("Weather API unavailable");
+            return descriptions[code] || ["🌡️", "Current Weather"];
         }
 
-        const data = await response.json();
-        const current = data.current;
+        async function loadWeather() {
+            const status = document.getElementById("status-text");
 
-        if (!current) {
-            throw new Error("No current weather data");
+            try {
+                status.textContent = "نوێکردنەوەی کەشوهەوا...";
+
+                const response = await fetch(API_URL, {
+                    cache: "no-store"
+                });
+
+                if (!response.ok) {
+                    throw new Error("Weather API unavailable");
+                }
+
+                const data = await response.json();
+                const current = data.current;
+
+                if (!current) {
+                    throw new Error("No current weather data");
+                }
+
+                const temperature = Math.round(current.temperature_2m);
+                const humidity = Math.round(current.relative_humidity_2m);
+                const wind = Math.round(current.wind_speed_10m);
+                const code = current.weather_code;
+                const isDay = current.is_day === 1;
+
+                const weather = getWeatherDescription(code);
+                let emoji = weather[0];
+
+                if (!isDay && (code === 0 || code === 1)) {
+                    emoji = "🌙";
+                }
+
+                document.getElementById("temp-val").textContent =
+                    temperature + "°C";
+
+                document.getElementById("weather-icon").textContent = emoji;
+                document.getElementById("cond-text").textContent = weather[1];
+
+                document.getElementById("extra-text").textContent =
+                    "Humidity: " + humidity +
+                    "% | Wind: " + wind + " km/h";
+
+                const updatedAt = new Date();
+
+                document.getElementById("status-text").textContent =
+                    "نوێکراوە: " +
+                    updatedAt.toLocaleTimeString("en-GB", {
+                        timeZone: "Asia/Baghdad",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: false
+                    });
+
+            } catch (error) {
+                status.textContent = "کەشوهەوا بەردەست نییە - دووبارە هەوڵدەدات...";
+                console.error("Weather loading error:", error);
+            }
         }
 
-        const temperature = Math.round(current.temperature_2m);
-        const humidity = Math.round(current.relative_humidity_2m);
-        const wind = Math.round(current.wind_speed_10m);
-        const code = current.weather_code;
-        const isDay = current.is_day === 1;
+        // Load weather immediately
+        loadWeather();
 
-        const weather = getWeatherDescription(code);
-        let emoji = weather[0];
-
-        if (!isDay && (code === 0 || code === 1)) {
-            emoji = "🌙";
-        }
-
-        document.getElementById("temp-val").textContent =
-            temperature + "°C";
-
-        document.getElementById("weather-icon").textContent = emoji;
-        document.getElementById("cond-text").textContent = weather[1];
-
-        document.getElementById("extra-text").textContent =
-            "Humidity: " + humidity +
-            "% | Wind: " + wind + " km/h";
-
-        const updatedAt = new Date();
-
-        document.getElementById("status-text").textContent =
-            "نوێکراوە: " +
-            updatedAt.toLocaleTimeString("en-GB", {
-                timeZone: "Asia/Baghdad",
-                hour: "2-digit",
-                minute: "2-digit",
-                hour12: false
-            });
-
-    } catch (error) {
-        status.textContent = "کەشوهەوا بەردەست نییە - دووبارە هەوڵدەدات...";
-        console.error("Weather loading error:", error);
-    }
-}
-
-// Load weather immediately
-loadWeather();
-
-// Automatically refresh every 5 minutes
-setInterval(loadWeather, 5 * 60 * 1000);
-</script>
+        // Automatically refresh every 5 minutes
+        setInterval(loadWeather, 5 * 60 * 1000);
+    </script>
 
 </body>
+
 </html>
