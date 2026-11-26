@@ -7,113 +7,34 @@
 <title>Erbil Weather</title>
 
 <style>
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
+* { box-sizing:border-box; margin:0; padding:0; }
 html, body {
-    width: 100%;
-    height: 100%;
-    background: transparent;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: 900;
-    overflow: hidden;
-    -webkit-font-smoothing: antialiased;
+ width:100%; height:100%; background:transparent; font-family:Arial,Helvetica,sans-serif;
+ overflow:hidden; -webkit-font-smoothing:antialiased;
 }
-
-.weather-widget-container {
-    position: fixed;
-    top: 0;
-    left: 70px;
-    z-index: 9999;
-}
-
+.weather-widget-container { position:fixed; top:18px; left:24px; z-index:9999; }
 .weather-circle {
-    width: 250px;
-    height: 250px;
-    border: 3px solid #7dd3fc;
-    border-radius: 50%;
-    background: linear-gradient(
-        145deg,
-        #071b72 0%,
-        #061344 55%,
-        #02091f 100%
-    );
-    box-shadow:
-        0 0 22px rgb(251, 252, 253),
-        0 0 40px rgb(253, 252, 252),
-        inset 0 0 20px rgba(248, 249, 249, 0.12);
-    color: #ffffff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 14px;
-    gap: 4px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.85);
+ width:260px; min-height:250px; border:1px solid rgba(255,255,255,.28);
+ border-radius:28px;
+ background:linear-gradient(145deg, rgba(14,35,78,.88), rgba(4,12,30,.92));
+ box-shadow:0 12px 32px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.12);
+ backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+ color:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center;
+ text-align:center; padding:20px 18px; gap:7px;
 }
-
-.city {
-    font-size: 20px;
-    font-weight: 900;
-    color: #ffffff;
-    white-space: nowrap;
-    text-shadow: 0 2px 5px #000000;
-}
-
-.weather-icon {
-    font-size: 20px;
-    line-height: 1.15;
-    filter: drop-shadow(0 2px 3px rgba(0,0,0,0.6));
-}
-
-.temp {
-    font-size: 20px;
-    font-weight: 900;
-    line-height: 1.1;
-    direction: ltr;
-    color: #ffffff;
-    text-shadow:
-        0 2px 4px #000000,
-        0 0 12px rgb(249, 250, 250);
-}
-
-.condition {
-    font-size: 20px;
-    font-weight: 900;
-    color: #ffffff;
-    white-space: nowrap;
-    text-shadow: 0 2px 4px #000000;
-}
-
+.city { font-size:17px; font-weight:800; color:#dceeff; white-space:nowrap; letter-spacing:.3px; }
+.weather-icon { font-size:44px; line-height:1.1; filter:drop-shadow(0 3px 8px rgba(0,0,0,.3)); }
+.temp { font-size:42px; font-weight:800; line-height:1; direction:ltr; color:#fff; letter-spacing:-1px; }
+.condition { font-size:15px; font-weight:700; color:#e7f2ff; white-space:nowrap; }
 .extra-info {
-    width: 100%;
-    margin-top: 5px;
-    padding-top: 6px;
-    border-top: 2px solid rgb(249, 250, 251);
-    color: #ffffff;
-    font-size: 13px;
-    font-weight: 900;
-    line-height: 1.7;
-    text-shadow: 0 2px 4px #000000;
+ width:100%; margin-top:8px; padding-top:10px; border-top:1px solid rgba(255,255,255,.22);
+ color:#d6e6f7; font-size:13px; font-weight:600; line-height:1.8;
 }
-
-.status {
-    font-size: 20px;
-    font-weight: 900;
-    color: #f9fafa;
-    margin-top: 1px;
-    text-shadow: 0 1px 3px #000000;
-}
-
-@media (max-width: 400px) {
-    .weather-widget-container {
-        top: 30px;
-        left: 30px;
-    }
+.status { font-size:11px; color:#9fc5e9; margin-top:2px; font-weight:600; }
+@media (max-width:400px) {
+ .weather-widget-container { top:12px; left:12px; }
+ .weather-circle { width:230px; min-height:225px; padding:16px; }
+ .temp { font-size:38px; }
 }
 </style>
 </head>
@@ -122,12 +43,12 @@ html, body {
 
 <div class="weather-widget-container">
     <div class="weather-circle">
-        <div class="city">📍 Erbil</div>
+        <div class="city">📍 هەولێر</div>
         <div class="weather-icon" id="weather-icon">🌤️</div>
         <div class="temp" id="temp-val">--°C</div>
-        <div class="condition" id="cond-text">Loading weather...</div>
+        <div class="condition" id="cond-text">کەشوهەوا بارکردن...</div>
         <div class="extra-info" id="extra-text">
-            Humidity: --% | Wind: -- km/h
+            شێ: --% | با: -- km/h
         </div>
         <div class="status" id="status-text">Connecting to weather...</div>
     </div>
@@ -180,7 +101,7 @@ async function loadWeather() {
     const status = document.getElementById("status-text");
 
     try {
-        status.textContent = "Updating weather...";
+        status.textContent = "نوێکردنەوەی کەشوهەوا...";
 
         const response = await fetch(API_URL, {
             cache: "no-store"
@@ -223,7 +144,7 @@ async function loadWeather() {
         const updatedAt = new Date();
 
         document.getElementById("status-text").textContent =
-            "Updated: " +
+            "نوێکراوە: " +
             updatedAt.toLocaleTimeString("en-GB", {
                 timeZone: "Asia/Baghdad",
                 hour: "2-digit",
@@ -232,7 +153,7 @@ async function loadWeather() {
             });
 
     } catch (error) {
-        status.textContent = "Weather unavailable - retrying...";
+        status.textContent = "کەشوهەوا بەردەست نییە - دووبارە هەوڵدەدات...";
         console.error("Weather loading error:", error);
     }
 }
